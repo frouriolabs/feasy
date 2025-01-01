@@ -35,4 +35,4 @@ npm-debug.log*
 .vercel
 
 # favoriteBtn
-/src/scriptsOut
+/chrome-extention/scriptsOut

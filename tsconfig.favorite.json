@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
-    "outDir": "./src/scriptsOut",
+    "outDir": "./feasy-extention/scriptsOut",
     "strict": true
   },
   "include": ["src/scripts/**/*.ts"],

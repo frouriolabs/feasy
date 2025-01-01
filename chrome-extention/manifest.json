@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Feasy Extention",
+  "description": "Feasyのスクリプトを自動実行するための拡張機能です",
+  "version": "1.0",
+
+  "permissions": ["activeTab", "scripting"],
+  "host_permissions": ["<all_urls>"],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Open Feasy",
+    "default_icon": {
+      "16": "img/icon16.png",
+      "48": "img/icon48.png",
+      "128": "img/icon128.png"
+    }
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scriptsOut/favoriteBtn.js"]
+    }
+  ]
+}
