@@ -1,5 +1,5 @@
-import { IframeHideBtn } from '../scripts/IframeHideBtn';
-import { SendDataForm } from '../scripts/SendDataForm';
+import { IframeHideBtn } from '../components/iframe/IframeHideBtn';
+import { SendDataForm } from '../components/iframe/SendDataForm';
 import styles from './index.module.css';
 
 const Home = () => {

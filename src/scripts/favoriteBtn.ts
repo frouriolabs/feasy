@@ -1,23 +1,8 @@
-type PostActions = 'hide' | 'share';
-
-type PostContent = {
-  name: string;
-  email: string;
-  old: string;
-};
-
-type PostData = {
-  action: PostActions;
-  content: PostContent;
-};
-
-type PostFunc = {
-  [key in PostActions]: (content: PostContent) => void;
-};
-
-type Styles = { property: keyof CSSStyleDeclaration; value: string }[];
+import type { PostData, PostFunc } from '../types/Post.type';
 
 const LOCALHOST_URL = 'http://localhost:3000';
+
+type Styles = { property: keyof CSSStyleDeclaration; value: string }[];
 
 const btnStyle: Styles = [
   { property: 'width', value: '160px' },
@@ -62,56 +47,54 @@ const showIframe = () => {
   const iframe = document.createElement('iframe');
 
   iframe.src = LOCALHOST_URL;
-  iframe.sandbox.value = 'allow-scripts allow-same-origin';
+  iframe.sandbox.value = 'allow-scripts allow-same-origin allow-modals';
+
   setStyle(iframe, iframeStyle);
 
   container.appendChild(iframe);
 };
 
 const hideIframe = () => {
+  const iframe = container.querySelector('iframe');
+
+  if (!iframe) return;
+
+  container.removeChild(iframe);
+
   setStyle(container, containerHideStyle);
 };
 
-const combineIdentifiers: { id: string; kind: keyof PostContent }[] = [
-  {
-    id: 'q1',
-    kind: 'name',
-  },
-  {
-    id: 'q2',
-    kind: 'email',
-  },
-  {
-    id: 'q5',
-    kind: 'old',
-  },
-];
-
-const shareForm = (content: PostContent) => {
+const shareForm = (event: MessageEvent) => {
+  const postData: PostData = event.data;
   const inputElms = Array.from(document.getElementsByTagName('input'));
 
-  combineIdentifiers.forEach((val) => {
+  postData.content.forEach((val) => {
     const elm = inputElms.find(({ id }) => id === val.id);
 
     if (!elm) return;
 
-    elm.value = content[val.kind];
+    elm.value = val.value;
   });
 
   hideIframe();
 };
 
+const originCheck = (event: MessageEvent) => {
+  if (!event.source) return;
+
+  event.source.postMessage(window.location.origin, { targetOrigin: event.origin });
+};
+
 const iframePostActions: PostFunc = {
   hide: hideIframe,
   share: shareForm,
+  check: originCheck,
 };
 
 window.addEventListener('message', (event) => {
-  if (event.origin !== LOCALHOST_URL) return;
-
   const postData: PostData = event.data;
 
-  iframePostActions[postData.action](postData.content);
+  iframePostActions[postData.action](event);
 });
 
 const btn = document.createElement('button');
